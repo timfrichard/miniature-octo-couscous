@@ -38,7 +38,7 @@ batch:
   tasbetc:
     process:
       service:
-        beginningLinesToSkip: 0
+        beginningLinesToSkip: 2
         chunkSize: 25
         csvFileHeaders: componentTasSP,componentTasATA,componentTasAID,componentTasBPOA,componentTasEPOA,componentTasA,componentTasMain,componentTasSub,adminBureau,gwaTas,gwaTasName,agencyName,betc,betcName,effectiveDate,suspendDate,credit,adjustmentBetc,starTas,starDeptReg,starDeptXfr,starMainAccount,transactionType,accountType,accountTypeDescription,fundType,fundTypeDescription,blankComma
         cronSchedule: "*/60 * * * * *"

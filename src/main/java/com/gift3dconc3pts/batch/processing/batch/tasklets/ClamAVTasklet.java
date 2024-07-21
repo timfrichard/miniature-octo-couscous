@@ -11,7 +11,6 @@ import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
-import org.springframework.http.ResponseEntity;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,12 +26,12 @@ public class ClamAVTasklet implements Tasklet {
 
         log.info("Executing ClamAV API call for JobHeaderID {}", jobHeaderId);
         FileUploadJobHeader fileUploadJobHeader = fileUploadJobHeaderService.findById(jobHeaderId);
-        ResponseEntity<ClamAVResponseDTO>  responseEntity = clamAVClient.scanFile(fileUploadJobHeader.getFileName());
-        if(!responseEntity.getBody().getClamAVScanResultDTO().isInfected()){
+        ClamAVResponseDTO  responseEntity = clamAVClient.scanFile(fileUploadJobHeader.getFileName());
+        if(!responseEntity.getScanResult().isInfected()){
             return RepeatStatus.FINISHED;
         } else {
             throw new ClamAVException("File " + fileUploadJobHeader.getFileName() + " contains malware named: "
-                    + responseEntity.getBody().getClamAVScanResultDTO().getVirusName());
+                    + responseEntity.getScanResult().getVirusName());
         }
 
     }

@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -24,19 +23,11 @@ public class ClamAVClient {
     private final StorageService storageService;
     private final WebClient webClient;
 
-    public ResponseEntity<ClamAVResponseDTO> scanFile(final String fileName) throws IOException {
+    public ClamAVResponseDTO scanFile(final String fileName) {
 
         Resource resource = storageService.loadAsResource(fileName);
-
         MultipartBodyBuilder builder = new MultipartBodyBuilder();
-        builder.part("file", resource.getFile());
-
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-//        MultiValueMap<String, Object> body
-//                = new LinkedMultiValueMap<>();
-//        body.add("file", resource.getFile());
-//        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(body, headers);
+        builder.part("file", resource);
         URI uri = UriComponentsBuilder.fromHttpUrl("http://localhost:8087/gifted-virus-scanner/scan").build().encode().toUri();
 
         return webClient.post()
@@ -44,7 +35,7 @@ public class ClamAVClient {
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(BodyInserters.fromMultipartData(builder.build()))
                 .retrieve()
-                .bodyToMono(ResponseEntity.class)
+                .bodyToMono(ClamAVResponseDTO.class)
                 .block();
     }
 }

@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ClamAVResponseDTO {
 
-    private ClamAVScanResultDTO clamAVScanResultDTO;
+    private ClamAVScanResultDTO scanResult;
 }
